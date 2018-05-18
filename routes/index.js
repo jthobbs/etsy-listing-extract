@@ -26,7 +26,7 @@ router.get('/:shopId/listings', function(req, res, next) {
 			listing.condition = 'new';
 			listing.price = result.price + ' ' + result.currency_code;
 			listing.url = result.url;
-			listing.url = 'Beautiful Chaos';
+			listing.brand = 'Beautiful Chaos';
 			listingMap[result.listing_id] = listing;
 			// listings.push(listing);
 
