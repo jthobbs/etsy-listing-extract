@@ -4,27 +4,12 @@ var Json2csvParser = require('json2csv').Parser;
 
 var Client = require('node-rest-client').Client;
 
-
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//
-// 	var client = new Client();
-// 	client.get('https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn', function(data, response) {
-// 		// parsed response body as js object
-// 		res.render('index', {
-// 			test: response
-// 		});
-//
-// 	});
-//
-// });
-
 /* GET home page. */
 router.get('/:shopId/listings', function(req, res, next) {
 	var shopId = req.params.shopId;
 	var apiKey = req.query.apikey;
 	var client = new Client();
-	var fields = ['sku', 'title', 'description', 'price', 'url', 'image_url', 'availability', 'condition'];
+	var fields = ['sku', 'title', 'description', 'availability', 'condition', 'price', 'url', 'image_url', 'brand'];
 	var listings = [];
 	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
 	var imgCalls = 0;
@@ -37,10 +22,11 @@ router.get('/:shopId/listings', function(req, res, next) {
 			listing.sku = result.listing_id;
 			listing.title = result.title;
 			listing.description = result.description;
-			listing.price = result.price + ' ' + result.currency_code;
-			listing.url = result.url;
 			listing.availability = 'in stock';
 			listing.condition = 'new';
+			listing.price = result.price + ' ' + result.currency_code;
+			listing.url = result.url;
+			listing.url = 'Beautiful Chaos';
 			listingMap[result.listing_id] = listing;
 			// listings.push(listing);
 
@@ -72,8 +58,6 @@ router.get('/:shopId/listings', function(req, res, next) {
 					});
 
 					res.end(file);
-				} else {
-					console.log('nope');
 				}
 
 			});
