@@ -6,18 +6,18 @@ var Client = require('node-rest-client').Client;
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-
-	var client = new Client();
-	client.get('https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn', function(data, response) {
-		// parsed response body as js object
-		res.render('index', {
-			test: response
-		});
-
-	});
-
-});
+// router.get('/', function(req, res, next) {
+//
+// 	var client = new Client();
+// 	client.get('https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn', function(data, response) {
+// 		// parsed response body as js object
+// 		res.render('index', {
+// 			test: response
+// 		});
+//
+// 	});
+//
+// });
 
 /* GET home page. */
 router.get('/:shopId/listings', function(req, res, next) {
@@ -28,9 +28,21 @@ router.get('/:shopId/listings', function(req, res, next) {
 	var listings = [];
 	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
 	var imgCalls = 0;
+	var listingMap = {};
 	client.get(url, function(data, response) {
 		for (var i = 0; i < data.results.length; i++) {
 			var result = data.results[i];
+
+			var listing = {};
+			listing.sku = result.listing_id;
+			listing.title = result.title;
+			listing.description = result.description;
+			listing.price = result.price + ' ' + result.currency_code;
+			listing.url = result.url;
+			listing.availability = 'in stock';
+			listing.condition = 'new';
+			listingMap[result.listing_id] = listing;
+			// listings.push(listing);
 
 			// https://openapi.etsy.com/v2/listings/504394946/images?api_key=kt5f7zlun66009cyfp79p1cn
 			var imgUrl = 'https://openapi.etsy.com/v2/listings/' + result.listing_id + '/images?api_key=' + apiKey;
@@ -39,16 +51,9 @@ router.get('/:shopId/listings', function(req, res, next) {
 				imgCalls++;
 				if (data2.results) {
 					var img = data2.results[0];
+					var listing = listingMap[img.listing_id];
 					// get the images
-					var listing = {};
-					listing.sku = result.listing_id;
-					listing.title = result.title;
-					listing.description = result.description;
-					listing.price = result.price + ' ' + result.currency_code;
-					listing.url = result.url;
 					listing.image_url = img.url_fullxfull;
-					listing.availability = 'in stock';
-					listing.condition = 'new';
 					listings.push(listing);
 				}
 
