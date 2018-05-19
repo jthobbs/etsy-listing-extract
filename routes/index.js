@@ -9,7 +9,7 @@ router.get('/:shopId/listings', function(req, res, next) {
 	var shopId = req.params.shopId;
 	var apiKey = req.query.apikey;
 	var client = new Client();
-	var fields = ['sku', 'title', 'description', 'availability', 'condition', 'price', 'url', 'image_url', 'brand'];
+	var fields = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand'];
 	var listings = [];
 	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
 	var imgCalls = 0;
@@ -19,13 +19,13 @@ router.get('/:shopId/listings', function(req, res, next) {
 			var result = data.results[i];
 
 			var listing = {};
-			listing.sku = result.listing_id;
+			listing.id = result.listing_id;
 			listing.title = result.title;
 			listing.description = result.description;
 			listing.availability = 'in stock';
 			listing.condition = 'new';
 			listing.price = result.price + ' ' + result.currency_code;
-			listing.url = result.url;
+			listing.link = result.url;
 			listing.brand = 'Beautiful Chaos';
 			listingMap[result.listing_id] = listing;
 			// listings.push(listing);
@@ -39,7 +39,7 @@ router.get('/:shopId/listings', function(req, res, next) {
 					var img = data2.results[0];
 					var listing = listingMap[img.listing_id];
 					// get the images
-					listing.image_url = img.url_fullxfull;
+					listing.image_link = img.url_fullxfull;
 					listings.push(listing);
 				}
 
