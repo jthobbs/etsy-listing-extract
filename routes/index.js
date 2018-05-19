@@ -12,65 +12,75 @@ router.get('/:shopId/listings', function(req, res, next) {
 	var client = new Client();
 	var fields = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand'];
 	var listings = [];
-	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?includes=MainImage&api_key=' + apiKey;
+	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
 	var imgCalls = 0;
 	var listingMap = {};
 	client.get(url, function(data, response) {
-		for (var i = 0; i < data.results.length; i++) {
-			console.log(i);
-			var result = data.results[i];
+		if(data){
+			var count = data.count;
+			var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?includes=MainImage&limit=' + count + '&api_key=' + apiKey;
+			client.get(url, function(data, response) {
+				for (var i = 0; i < data.results.length; i++) {
+					console.log(i);
+					var result = data.results[i];
 
-			var listing = {};
-			listing.id = result.listing_id;
-			listing.title = decode(result.title);
-			listing.description = decode(result.description);
-			listing.availability = 'in stock';
-			listing.condition = 'new';
-			listing.price = result.price + ' ' + result.currency_code;
-			listing.link = result.url;
-			listing.image_link = result.MainImage.url_fullxfull;
-			listing.brand = 'Beautiful Chaos';
-			listings.push(listing);
-
-			// listings.push(listing);
-
-			// https://openapi.etsy.com/v2/listings/504394946/images?api_key=kt5f7zlun66009cyfp79p1cn
-			// var imgUrl = 'https://openapi.etsy.com/v2/listings/' + result.listing_id + '/images?api_key=' + apiKey;
-			// console.log(imgUrl);
-			/*
-			client.get(imgUrl, function(data2, response2) {
-				console.log(data2);
-				imgCalls++;
-				if (data2.results) {
-					var img = data2.results[0];
-					var listing = listingMap[img.listing_id];
-					// get the images
-					listing.image_link = img.url_fullxfull;
+					var listing = {};
+					listing.id = result.listing_id;
+					listing.title = decode(result.title);
+					listing.description = decode(result.description);
+					listing.availability = 'in stock';
+					listing.condition = 'new';
+					listing.price = result.price + ' ' + result.currency_code;
+					listing.link = result.url;
+					listing.image_link = result.MainImage.url_fullxfull;
+					listing.brand = 'Beautiful Chaos';
 					listings.push(listing);
+
+					// listings.push(listing);
+
+					// https://openapi.etsy.com/v2/listings/504394946/images?api_key=kt5f7zlun66009cyfp79p1cn
+					// var imgUrl = 'https://openapi.etsy.com/v2/listings/' + result.listing_id + '/images?api_key=' + apiKey;
+					// console.log(imgUrl);
+					/*
+					client.get(imgUrl, function(data2, response2) {
+						console.log(data2);
+						imgCalls++;
+						if (data2.results) {
+							var img = data2.results[0];
+							var listing = listingMap[img.listing_id];
+							// get the images
+							listing.image_link = img.url_fullxfull;
+							listings.push(listing);
+						}
+
+						if (imgCalls == data.results.length) {
+
+						}
+
+					});
+					*/
 				}
 
-				if (imgCalls == data.results.length) {
+				const json2csvParser = new Json2csvParser({
+					fields
+				});
+				const csv = json2csvParser.parse(listings);
 
-				}
+				let file = Buffer.from(csv, 'utf8');
+
+				res.writeHead(200, {
+					'Content-Type': 'text/csv',
+					'Content-disposition': `attachment; filename=listings.csv`,
+					'Content-Length': file.length
+				});
+
+				res.end(file);
 
 			});
-			*/
+		}else{
+			// no data
+			console.log('no data');
 		}
-
-		const json2csvParser = new Json2csvParser({
-			fields
-		});
-		const csv = json2csvParser.parse(listings);
-
-		let file = Buffer.from(csv, 'utf8');
-
-		res.writeHead(200, {
-			'Content-Type': 'text/csv',
-			'Content-disposition': `attachment; filename=listings.csv`,
-			'Content-Length': file.length
-		});
-
-		res.end(file);
 
 	});
 
