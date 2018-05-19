@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var decode = require('unescape');
 var Json2csvParser = require('json2csv').Parser;
 
 var Client = require('node-rest-client').Client;
@@ -20,8 +21,8 @@ router.get('/:shopId/listings', function(req, res, next) {
 
 			var listing = {};
 			listing.id = result.listing_id;
-			listing.title = result.title;
-			listing.description = result.description;
+			listing.title = decode(result.title);
+			listing.description = decode(result.description);
 			listing.availability = 'in stock';
 			listing.condition = 'new';
 			listing.price = result.price + ' ' + result.currency_code;
