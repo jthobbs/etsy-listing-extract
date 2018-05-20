@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    div.row
+        div.container.p-4
+            form(action='/shop', method='GET')
+                div.row
+                    div.col
+                        div.crooked
+                            //- a(href='#{relativeUrl}')
+                                //- pre(style='font-size: 24px; color: #ffffff') #{fullUrl}
+                            input.w-100.color-white.px-2.py-3(type='text', name='shop_name', placeholder='enter your shop name', style='font-size: 24px; color: #ffffff; border: 0; background: none;')
+                div.row
+                    div.col.text-right
+                        input(type='submit', style='border: 0; background: none; font-weight: bold; text-transform: uppercase;')

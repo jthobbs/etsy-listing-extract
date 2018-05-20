@@ -1,0 +1,23 @@
+doctype html
+html
+    head
+        title=title
+        link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,800')
+        //- link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700')
+        link(rel='stylesheet', href='/css/style.css')
+        link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css", integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4", crossorigin="anonymous")
+        link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.0.13/css/all.css', integrity='sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp', crossorigin='anonymous')
+        //- script(src='https://code.jquery.com/jquery-3.3.1.min.js')
+        script(src="https://code.jquery.com/jquery-3.3.1.min.js", integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=", crossorigin="anonymous")
+        //- script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js')
+        script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js')
+    body
+        div.col
+            div.row.header.border-bottom
+                div.container
+                    div.row
+                        div.col.py-3
+                            img(src='/img/logo.png', style='height:48px;')
+            div.row.content
+                div.col
+                    block content

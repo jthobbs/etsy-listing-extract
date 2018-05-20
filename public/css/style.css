@@ -1,0 +1,29 @@
+html, body {
+    color: #424243;
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.crooked {
+    -webkit-clip-path: polygon(0 0, 1600px 0, 1600px 70%, 0 100%);
+    clip-path: polygon(0 0, 1600px 0, 1600px 70%, 0 100%);
+    background-color: #ed6763;
+    color: #ffffff;
+}
+
+input.color-white::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #ffffff;
+    opacity: .5;
+}
+
+input.color-white:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #ffffff;
+    opacity: .5;
+}
+
+input.color-white::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #ffffff;
+    opacity: .5;
+}

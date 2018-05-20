@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    div.row
+        div.container.p-4.text-center
+            div.row
+                div.col.text-center.mb-3
+                    small
+                        strong.text-uppercase Click below to download a CSV of your active listings
+            div.row
+                div.col
+                    div.crooked.p-3
+                        a(href='#{relativeUrl}')
+                            pre(style='font-size: 24px; color: #ffffff') #{fullUrl}

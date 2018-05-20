@@ -4,6 +4,11 @@ var path = require('path');
 
 var app = express();
 
+// use jade
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.use(express.static(path.join(__dirname, 'public')));
+
 var index = require('./routes/index');
 app.use('/', index);
 
