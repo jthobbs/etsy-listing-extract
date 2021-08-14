@@ -72,6 +72,7 @@ router.get('/:shopId/listings', function (req, res, next) {
 					listings.push(listing);
 				}
 
+				var responseType = req.query.responseType;
 				if (responseType && responseType == 'json') {
 					response.send(listings);
 				} else {
