@@ -4,19 +4,19 @@ var decode = require('unescape');
 var Json2csvParser = require('json2csv').Parser;
 var Client = require('node-rest-client').Client;
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
 	// var url = 'https://etsy-listing-extract.herokuapp.com/shopid';
 	res.render('index', {
 		url: url
 	});
 });
 
-router.get('/shop', function(req, res, next) {
+router.get('/shop', function (req, res, next) {
 	var shopName = req.query.shop_name;
 	var url = 'https://openapi.etsy.com/v2/shops?shop_name=' + shopName + '&api_key=kt5f7zlun66009cyfp79p1cn';
 
 	var client = new Client();
-	client.get(url, function(data, response) {
+	client.get(url, function (data, response) {
 		if (data) {
 
 			var shopId = data.results[0].shop_id;
@@ -32,7 +32,7 @@ router.get('/shop', function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/:shopId/listings', function(req, res, next) {
+router.get('/:shopId/listings', function (req, res, next) {
 	var shopId = req.params.shopId;
 	var apiKey = req.query.apikey;
 	if (!apiKey) {
@@ -43,13 +43,13 @@ router.get('/:shopId/listings', function(req, res, next) {
 	var listings = [];
 
 	var client = new Client();
-	//https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn?replaceDomain=etsy.com&replaceWith=beautifulchaosshoppe.com
+	//https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn?replaceDomain=etsy.com&replaceWith=beautifulchaosshoppe.com&brand=Beautiful Chaos
 	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
-	client.get(url, function(data, response) {
+	client.get(url, function (data, response) {
 		if (data) {
 			var count = data.count;
 			var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?includes=MainImage&limit=' + count + '&api_key=' + apiKey;
-			client.get(url, function(data, response) {
+			client.get(url, function (data, response) {
 				for (var i = 0; i < data.results.length; i++) {
 					var result = data.results[i];
 
@@ -63,7 +63,7 @@ router.get('/:shopId/listings', function(req, res, next) {
 					var url = result.url;
 					var replaceDomain = req.query.replaceDomain;
 					var replaceWith = req.query.replaceWith;
-					if(replaceDomain && replaceWith && url.includes(replaceDomain)){
+					if (replaceDomain && replaceWith && url.includes(replaceDomain)) {
 						url = url.replaceAll(replaceDomain, replaceWith);
 					}
 					listing.link = url;
@@ -72,20 +72,24 @@ router.get('/:shopId/listings', function(req, res, next) {
 					listings.push(listing);
 				}
 
-				const json2csvParser = new Json2csvParser({
-					fields
-				});
-				const csv = json2csvParser.parse(listings);
+				if (responseType && responseType == 'json') {
+					response.send(listings);
+				} else {
+					const json2csvParser = new Json2csvParser({
+						fields
+					});
+					const csv = json2csvParser.parse(listings);
 
-				let file = Buffer.from(csv, 'utf8');
+					let file = Buffer.from(csv, 'utf8');
+					res.writeHead(200, {
+						'Content-Type': 'text/csv',
+						'Content-disposition': `attachment; filename=listings.csv`,
+						'Content-Length': file.length
+					});
 
-				res.writeHead(200, {
-					'Content-Type': 'text/csv',
-					'Content-disposition': `attachment; filename=listings.csv`,
-					'Content-Length': file.length
-				});
+					res.end(file);
+				}
 
-				res.end(file);
 
 			});
 		} else {
