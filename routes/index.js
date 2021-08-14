@@ -75,7 +75,7 @@ router.get('/:shopId/listings', function (req, res, next) {
 
 				var responseType = req.query.responseType;
 				if (responseType && responseType == 'json') {
-					response.send(listings);
+					res.json(listings);
 				} else {
 					const json2csvParser = new Json2csvParser({
 						fields
