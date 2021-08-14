@@ -43,6 +43,7 @@ router.get('/:shopId/listings', function(req, res, next) {
 	var listings = [];
 
 	var client = new Client();
+	//https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn?replaceDomain=etsy.com&replaceWith=beautifulchaosshoppe.com
 	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
 	client.get(url, function(data, response) {
 		if (data) {
@@ -59,7 +60,13 @@ router.get('/:shopId/listings', function(req, res, next) {
 					listing.availability = 'in stock';
 					listing.condition = 'new';
 					listing.price = result.price + ' ' + result.currency_code;
-					listing.link = result.url;
+					var url = result.url;
+					var replaceDomain = req.query.replaceDomain;
+					var replaceWith = req.query.replaceWith;
+					if(replaceDomain && replaceWith && url.includes(replaceDomain)){
+						url = url.replaceAll(replaceDomain, replaceWith);
+					}
+					listing.link = url;
 					listing.image_link = result.MainImage.url_fullxfull;
 					listing.brand = 'Beautiful Chaos';
 					listings.push(listing);
