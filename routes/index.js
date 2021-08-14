@@ -49,7 +49,7 @@ router.get('/:shopId/listings', function (req, res, next) {
 		if (data) {
 			var count = data.count;
 			etsyUrl = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?includes=MainImage&limit=' + count + '&api_key=' + apiKey;
-			client.get(url, function (data, response) {
+			client.get(etsyUrl, function (data, response) {
 				for (var i = 0; i < data.results.length; i++) {
 					var result = data.results[i];
 
