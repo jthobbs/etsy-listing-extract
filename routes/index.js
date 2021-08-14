@@ -60,13 +60,13 @@ router.get('/:shopId/listings', function (req, res, next) {
 					listing.availability = 'in stock';
 					listing.condition = 'new';
 					listing.price = result.price + ' ' + result.currency_code;
-					var url = result.url;
+					var link = result.url;
 					var replaceDomain = req.query.replaceDomain;
 					var replaceWith = req.query.replaceWith;
-					if (replaceDomain && replaceWith && url.includes(replaceDomain)) {
-						url = url.replaceAll(replaceDomain, replaceWith);
+					if (replaceDomain && replaceWith && link.includes(replaceDomain)) {
+						link = link.replaceAll(replaceDomain, replaceWith);
 					}
-					listing.link = url;
+					listing.link = link;
 					listing.image_link = result.MainImage.url_fullxfull;
 					listing.brand = 'Beautiful Chaos';
 					listings.push(listing);
