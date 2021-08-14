@@ -69,7 +69,7 @@ router.get('/:shopId/listings', function (req, res, next) {
 					}
 					listing.link = link;
 					listing.image_link = result.MainImage.url_fullxfull;
-					listing.brand = 'Beautiful Chaos';
+					listing.brand = req.query.brand;
 					listings.push(listing);
 				}
 
