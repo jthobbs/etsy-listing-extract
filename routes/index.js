@@ -44,11 +44,11 @@ router.get('/:shopId/listings', function (req, res, next) {
 
 	var client = new Client();
 	//https://openapi.etsy.com/v2/shops/11395425/listings/active?api_key=kt5f7zlun66009cyfp79p1cn?replaceDomain=etsy.com&replaceWith=beautifulchaosshoppe.com&brand=Beautiful Chaos
-	var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
-	client.get(url, function (data, response) {
+	var etsyUrl = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?api_key=' + apiKey;
+	client.get(etsyUrl, function (data, response) {
 		if (data) {
 			var count = data.count;
-			var url = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?includes=MainImage&limit=' + count + '&api_key=' + apiKey;
+			etsyUrl = 'https://openapi.etsy.com/v2/shops/' + shopId + '/listings/active?includes=MainImage&limit=' + count + '&api_key=' + apiKey;
 			client.get(url, function (data, response) {
 				for (var i = 0; i < data.results.length; i++) {
 					var result = data.results[i];
@@ -64,7 +64,8 @@ router.get('/:shopId/listings', function (req, res, next) {
 					var replaceDomain = req.query.replaceDomain;
 					var replaceWith = req.query.replaceWith;
 					if (replaceDomain && replaceWith && link.includes(replaceDomain)) {
-						link = link.replaceAll(replaceDomain, replaceWith);
+						// link = link.replaceAll(replaceDomain, replaceWith);
+						link = link.replace(replaceDomain, replaceWith);
 					}
 					listing.link = link;
 					listing.image_link = result.MainImage.url_fullxfull;
