@@ -5,7 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "debug": "^4.3.2",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "jade": "^0.29.0",
     "json2csv": "^4.1.2",
     "node-rest-client": "^1.4.4",
